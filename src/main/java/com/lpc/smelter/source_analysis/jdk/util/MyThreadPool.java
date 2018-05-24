@@ -13,10 +13,10 @@ import java.util.concurrent.*;
  */
 public class MyThreadPool {
 
-	public static final int CORE_POOL_SIZE_1 = 20;
-	public static final int MAX_IMUM_POOL_SIZE_1 = 50;
+	public static final int CORE_POOL_SIZE_1 = 2;
+	public static final int MAX_IMUM_POOL_SIZE_1 = 4;
 	public static final long KEEP_ALIVE_TIME_1 = 60;
-	public static final int WORK_QUEUE_SIZE_1 = 50;
+	public static final int WORK_QUEUE_SIZE_1 = 4;
 	
 	/**一级业务线程池**/
 	public static final ThreadPoolExecutor oneBusinessThreadPool = new ThreadPoolExecutor(CORE_POOL_SIZE_1,

@@ -17,14 +17,7 @@ public class ThreadPoolTest {
 
 	public static void main(String[] args) {
 		final Random random = new Random();
-		for(int i=0;i<10;i++){
-			task();
-			try {
-				Thread.sleep(random.nextInt(5000));
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-		}
+		task();
 	}
 
 	private static void task(){
@@ -36,7 +29,7 @@ public class ThreadPoolTest {
 			task.add(new Callable<Object>() {
 				@Override
 				public Object call() throws Exception {
-					Thread.sleep(random.nextInt(10000));
+					System.out.println("Thread="+Thread.currentThread().getName());
 					return null;
 				}
 			});
@@ -44,7 +37,7 @@ public class ThreadPoolTest {
 			task.add(new Callable<Object>() {
 				@Override
 				public Object call() throws Exception {
-					Thread.sleep(random.nextInt(10000));
+					System.out.println("Thread=" + Thread.currentThread().getName());
 					return null;
 				}
 			});
@@ -52,7 +45,7 @@ public class ThreadPoolTest {
 			task.add(new Callable<Object>() {
 				@Override
 				public Object call() throws Exception {
-					Thread.sleep(random.nextInt(10000));
+					System.out.println("Thread=" + Thread.currentThread().getName());
 					return null;
 				}
 			});
@@ -60,7 +53,7 @@ public class ThreadPoolTest {
 			task.add(new Callable<Object>() {
 				@Override
 				public Object call() throws Exception {
-					Thread.sleep(random.nextInt(10000));
+					System.out.println("Thread=" + Thread.currentThread().getName());
 					return null;
 				}
 			});
@@ -68,7 +61,7 @@ public class ThreadPoolTest {
 			task.add(new Callable<Object>() {
 				@Override
 				public Object call() throws Exception {
-					Thread.sleep(random.nextInt(10000));
+					System.out.println("Thread=" + Thread.currentThread().getName());
 					return null;
 				}
 			});
