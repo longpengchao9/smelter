@@ -16,11 +16,9 @@ public class OneHystrix extends HystrixCommand<String> {
 	public OneHystrix(String name) {
 		super(Setter.withGroupKey(HystrixCommandGroupKey.Factory.asKey("OneGroup"))
 				.andCommandKey(HystrixCommandKey.Factory.asKey("sss"))
-				.andThreadPoolPropertiesDefaults(
-						HystrixThreadPoolProperties.Setter().withCoreSize(2))
-				.andCommandPropertiesDefaults(
-						HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(50))
-		.andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("test")));
+				.andThreadPoolPropertiesDefaults(HystrixThreadPoolProperties.Setter().withCoreSize(2))
+				.andCommandPropertiesDefaults(HystrixCommandProperties.Setter().withExecutionTimeoutInMilliseconds(50))
+				.andThreadPoolKey(HystrixThreadPoolKey.Factory.asKey("test")));
 		this.name = name;
 	}
 
@@ -39,24 +37,10 @@ public class OneHystrix extends HystrixCommand<String> {
 	}
 
 	public static void main(String[] args) {
-		for (int n = 0; n < 100; n++) {
-			OneHystrix oneHystrix = new OneHystrix("hello" + n);
-			String str = oneHystrix.execute();
-			System.out.println(str);
-			/*
-			 * Observable<String> fs = new OneHystrix("hello"+n).observe();
-			 * fs.subscribe(new Observer<String>() {
-			 * 
-			 * @Override public void onCompleted() { // onNext/onError完成之后最后回调
-			 * System.out.println("execute onCompleted"); }
-			 * 
-			 * @Override public void onError(Throwable e) { System.out.println(
-			 * "onError " + e.getMessage()); // e.printStackTrace(); }
-			 * 
-			 * @Override public void onNext(String s) { // 获取结果后回调
-			 * System.out.println("onNext: " + s); } });
-			 */
-
-		}
+		OneHystrix oneHystrix = new OneHystrix("hello");
+		String res = oneHystrix.execute();
+		System.out.println("是否超时："+oneHystrix.isResponseTimedOut());
+		System.out.println("是否执行失败："+oneHystrix.isFailedExecution());
+		System.out.println("");
 	}
 }

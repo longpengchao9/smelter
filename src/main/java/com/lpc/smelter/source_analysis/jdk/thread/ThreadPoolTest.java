@@ -1,12 +1,10 @@
 package com.lpc.smelter.source_analysis.jdk.thread;
 
-import com.lpc.smelter.source_analysis.jdk.util.MyThreadPool;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-import java.util.concurrent.Callable;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * @author longpengchao
@@ -15,12 +13,37 @@ import java.util.concurrent.TimeUnit;
  */
 public class ThreadPoolTest {
 
+	static class CommonThreadFactory implements ThreadFactory {
+		private final ThreadGroup group;
+		private final AtomicInteger threadNumber = new AtomicInteger(1);
+		private final String namePrefix;
+
+		CommonThreadFactory(String name) {
+			SecurityManager s = System.getSecurityManager();
+			group = (s != null) ? s.getThreadGroup() : Thread.currentThread().getThreadGroup();
+			namePrefix = name + "-Thread-";
+		}
+
+		public Thread newThread(Runnable r) {
+			Thread t = new Thread(group, r, namePrefix + threadNumber.getAndIncrement(), 0);
+			if (t.isDaemon())
+				t.setDaemon(false);
+			if (t.getPriority() != Thread.NORM_PRIORITY)
+				t.setPriority(Thread.NORM_PRIORITY);
+			return t;
+		}
+	}
+
+	private static ThreadPoolExecutor pool = new ThreadPoolExecutor(2, 10, 10000, TimeUnit.MILLISECONDS,
+			new LinkedBlockingDeque<Runnable>(100), new CommonThreadFactory("test"),
+			new ThreadPoolExecutor.CallerRunsPolicy());
+
 	public static void main(String[] args) {
 		final Random random = new Random();
 		task();
 	}
 
-	private static void task(){
+	private static void task() {
 		final Random random = new Random();
 		long start = System.currentTimeMillis();
 		try {
@@ -29,7 +52,7 @@ public class ThreadPoolTest {
 			task.add(new Callable<Object>() {
 				@Override
 				public Object call() throws Exception {
-					System.out.println("Thread="+Thread.currentThread().getName());
+					System.out.println("Thread=" + Thread.currentThread().getName());
 					return null;
 				}
 			});
@@ -66,16 +89,16 @@ public class ThreadPoolTest {
 				}
 			});
 			// 放入线程池中处理
-			MyThreadPool.oneBusinessThreadPool.invokeAll(task, 1500, TimeUnit.MILLISECONDS);
+			pool.invokeAll(task, 1500, TimeUnit.MILLISECONDS);
 			long time = System.currentTimeMillis() - start;
-			if(time > 1000){
-				System.out.println("cost:"+time);
+			if (time > 1000) {
+				System.out.println("cost:" + time);
 			}
-		} catch (Exception e){
+		} catch (Exception e) {
 			e.printStackTrace();
 			long time = System.currentTimeMillis() - start;
-			if(time > 1000){
-				System.out.println("error cost:"+time);
+			if (time > 1000) {
+				System.out.println("error cost:" + time);
 			}
 		}
 	}

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration status="error">
+	<appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout pattern="%d{HH:mm:ss.SSS} %-5level %class{36} %L %M - %msg%xEx%n"/>
+		</Console>
+		<RollingFile name="RollingFileInfo" fileName="D:/log/info.log"
+					 filePattern="${sys:user.home}/logs/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log">
+			<!--控制台只输出level及以上级别的信息（onMatch），其他的直接拒绝（onMismatch）-->
+			<ThresholdFilter level="info" onMatch="ACCEPT" onMismatch="DENY"/>
+			<PatternLayout pattern="[%d{HH:mm:ss:SSS}] [%p] - - %m%n"/>
+			<Policies>
+				<TimeBasedTriggeringPolicy/>
+				<SizeBasedTriggeringPolicy size="100 MB"/>
+			</Policies>
+		</RollingFile>
+	</appenders>
+	<loggers>
+
+		<logger name="com.lpc.smelter.source_analysis.guavacache" level="info">
+			<AppenderRef ref="Console"/>
+		</logger>
+		<root level="info">
+			<!--<appender-ref ref="Console"/>-->
+			<appender-ref ref="RollingFileInfo" />
+		</root>
+	</loggers>
+</configuration>   

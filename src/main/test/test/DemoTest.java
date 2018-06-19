@@ -1,4 +1,4 @@
-package java;
+package test;
 
 import org.apache.commons.lang3.StringUtils;
 import org.apache.commons.lang3.time.DateUtils;
@@ -40,6 +40,9 @@ public class DemoTest {
 		} catch (Exception e){
 			e.printStackTrace();
 		}
+	}
+	@Test
+	public void test3(){
 	}
 
 }
