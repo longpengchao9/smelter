@@ -21,9 +21,9 @@ public class AsynUpdate extends AsynUpdateGuavaCache<String, String> {
 
 	@Override
 	protected void initCacheFields() {
-		this.refreshTime = 2;
-		this.expireTime = 1;
-		this.timeUnit = TimeUnit.SECONDS;
+		this.refreshTime = 1000;
+		this.expireTime = 1000;
+		this.timeUnit = TimeUnit.MILLISECONDS;
 		this.cacheMaximumSize = 10;
 		this.refreshThreadSize = 2;
 	}
@@ -34,7 +34,7 @@ public class AsynUpdate extends AsynUpdateGuavaCache<String, String> {
 		int n = random.nextInt(100);
 		String value = key + "-" + n;
 		LoggerUtil.getLogger().info("key=" + key + ",value=" + value);
-		Thread.sleep(10);
+		Thread.currentThread().sleep(10);
 		return value;
 	}
 
@@ -44,38 +44,27 @@ public class AsynUpdate extends AsynUpdateGuavaCache<String, String> {
 //		AsynUpdate.singleton.put("key2", "22");
 //		AsynUpdate.singleton.put("key3", "33");
 //		AsynUpdate.singleton.put("key4", "44");
-		for (int i = 1; i < 5; i++) {
-			final int n = i;
-			service.execute(new Runnable() {
-				@Override
-				public void run() {
-					String val = null;
-					try {
-						val = AsynUpdate.singleton.getFromCache("key" + 1);
-						LoggerUtil.getLogger().info("第1次执行，value=" + val);
-					} catch (ExecutionException e) {
-						e.printStackTrace();
+		for(int j=0;j<7;j++){
+			LoggerUtil.getLogger().info("第" + j + "次执行开始");
+			final int n = j;
+			for (int i = 1; i < 5; i++) {
+				service.execute(new Runnable() {
+					@Override
+					public void run() {
+						String val = null;
+						try {
+							val = AsynUpdate.singleton.getFromCache("key" + 1);
+							LoggerUtil.getLogger().info("第"+n+"次执行，value=" + val);
+						} catch (ExecutionException e) {
+							e.printStackTrace();
+						}
 					}
-				}
-			});
+				});
+			}
+			Thread.currentThread().sleep(800);
+			LoggerUtil.getLogger().info("第" + j + "次执行结束");
 		}
-		Thread.sleep(3000);
 
-		for (int i = 1; i < 5; i++) {
-			final int n = i;
-			service.execute(new Runnable() {
-				@Override
-				public void run() {
-					String val = null;
-					try {
-						val = AsynUpdate.singleton.getFromCache("key" + 1);
-						LoggerUtil.getLogger().info("第2次执行，value=" + val);
-					} catch (ExecutionException e) {
-						e.printStackTrace();
-					}
-				}
-			});
-		}
 		System.out.println("success");
 
 	}

@@ -82,8 +82,13 @@ public abstract class AsynUpdateGuavaCache<K, V> {
 				if (cache == null) {
 					initCacheFields();
 					refreshThreadPools = MoreExecutors.listeningDecorator(Executors.newFixedThreadPool(refreshThreadSize));
+					/**
+					 * expireAfterWrite和refreshAfterWrite同时设置时（前后无差别）
+					 * expireAfterWrite起作用：1、过期时间设置相同  2、expireAfterWrite过期时间小
+					 * refreshAfterWrite起作用：1、refreshAfterWrite过期时间小
+					 */
 					cache = CacheBuilder.newBuilder().maximumSize(cacheMaximumSize)
-							.expireAfterWrite(refreshTime, timeUnit).refreshAfterWrite(expireTime, timeUnit).build(new CacheLoader<K, V>() {
+							.refreshAfterWrite(refreshTime, timeUnit).build(new CacheLoader<K, V>() {
 								@Override
 								public V load(K key) throws Exception {
 									LoggerUtil.getLogger().info("---load---- key=" + key);
