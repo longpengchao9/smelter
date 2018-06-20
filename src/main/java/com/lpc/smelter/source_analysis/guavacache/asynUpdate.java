@@ -22,7 +22,6 @@ public class AsynUpdate extends AsynUpdateGuavaCache<String, String> {
 	@Override
 	protected void initCacheFields() {
 		this.refreshTime = 1000;
-		this.expireTime = 1000;
 		this.timeUnit = TimeUnit.MILLISECONDS;
 		this.cacheMaximumSize = 10;
 		this.refreshThreadSize = 2;

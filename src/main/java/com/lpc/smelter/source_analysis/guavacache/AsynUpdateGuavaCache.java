@@ -24,10 +24,6 @@ public abstract class AsynUpdateGuavaCache<K, V> {
 	/**
 	 * 缓存自动刷新周期
 	 */
-	protected long expireTime;
-	/**
-	 * 缓存自动刷新周期
-	 */
 	protected long refreshTime;
 	/**
 	 * 缓存刷新周期时间格式
